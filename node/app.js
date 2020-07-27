@@ -1,28 +1,40 @@
 const { number_details } = require("../pkg/ssvm_nodejs_starter_lib.js");
 const express = require("express");
+const spawn = require("child_process").spawn;
+const fs = require("fs");
 
 const app = express();
 const port = 3000;
 
 app.use(express.static(__dirname + "/public"));
-console.log(__dirname);
 app.use(express.urlencoded({ extended: false }));
 
 app.get("/", (req, res) => res.redirect("/index.html"));
 
+// Main execution route
 app.post("/number-details", async function (req, res) {
   const number = parseFloat(req.body.number);
   const rust_result = number_details(number);
   const js_result = number_details_js(number);
-  res.send(rust_result + js_result);
+  let python_result;
+  const python_init = spawn("python3", [
+    __dirname + "/number_details.py",
+    number,
+  ]);
+  await python_init.stdout.on("data", function (data) {
+    res.send(rust_result + js_result + data.toString());
+  });
+  python_init.on("close", (code) => {});
 });
 
 app.listen(port, () => console.log(`Listening at http://localhost:${port}`));
 
+// Helper function for JS
 function find_factors(number) {
   return [...Array(number + 1).keys()].filter((i) => number % i === 0);
 }
 
+// Main Computation function
 function number_details_js(number) {
   const start_time = process.hrtime();
   const square = number * number;
