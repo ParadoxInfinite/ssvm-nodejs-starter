@@ -3,7 +3,7 @@
 This is a repository forked from [Second State's GitHub page](https://github.com/second-state/ssvm-nodejs-starter).
 I have modified the code to find details of a given number using 3 languages and compare their results + execution time.
 
-### Note : I cannot assure 100% accuracy on the timing measure for Rust as I'm still learning, but I have utilized the best method I could find.
+##### Note : I cannot assure 100% accuracy on the timing measure for Rust as I'm still learning, but I have utilized the best method I could find.
 
 ## Getting started
 
